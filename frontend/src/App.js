@@ -8,7 +8,7 @@ function App() {
   const [paso, setPaso] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [, setSedesMonitoreo] = useState([]);
+  
   const [tramiteId, setTramiteId] = useState(null);
 
   const [archivos, setArchivos] = useState({
@@ -39,18 +39,6 @@ function App() {
       .then(res => setZonas(res.data))
       .catch(err => console.error(err));
   }, []);
-
-
-
-  // MONITOREO
-  useEffect(() => {
-    if (paso === 4) {
-      axios.get('https://backend-lic-ipej.onrender.com/api/tramites/listar_monitoreo/')
-        .then(res => setSedesMonitoreo(res.data))
-        .catch(err => console.error(err));
-    }
-  }, [paso]);
-
 
 
   const handleLogout = () => {
