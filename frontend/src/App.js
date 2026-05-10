@@ -35,7 +35,7 @@ function App() {
 
   // ZONAS
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/zonas/')
+    axios.get('https://backend-lic-ipej.onrender.com/api/zonas/')
       .then(res => setZonas(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -45,7 +45,7 @@ function App() {
   // MONITOREO
   useEffect(() => {
     if (paso === 4) {
-      axios.get('http://127.0.0.1:8000/api/tramites/listar_monitoreo/')
+      axios.get('https://backend-lic-ipej.onrender.com/api/tramites/listar_monitoreo/')
         .then(res => setSedesMonitoreo(res.data))
         .catch(err => console.error(err));
     }
@@ -78,7 +78,7 @@ function App() {
     try {
 
       const res = await axios.post(
-        'http://127.0.0.1:8000/api/tramites/validar_cedula/',
+        'https://backend-lic-ipej.onrender.com/api/tramites/validar_cedula/',
         { cedula_numero: cedula }
       );
 
@@ -126,8 +126,8 @@ function App() {
       formData.append('paso_actual', paso + 1);
 
       const url = tramiteId
-        ? `http://127.0.0.1:8000/api/tramites/${tramiteId}/`
-        : `http://127.0.0.1:8000/api/tramites/`;
+        ? `https://backend-lic-ipej.onrender.com/api/tramites/${tramiteId}/`
+        : `https://backend-lic-ipej.onrender.com/api/tramites/`;
 
       const method = tramiteId ? 'patch' : 'post';
 
@@ -173,12 +173,12 @@ function App() {
     try {
 
       await axios.patch(
-        `http://127.0.0.1:8000/api/tramites/${tramiteId}/`,
+        `https://backend-lic-ipej.onrender.com/api/tramites/${tramiteId}/`,
         { zona }
       );
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/tramites/${tramiteId}/recomendar_sucursal/`
+        `https://backend-lic-ipej.onrender.com/api/tramites/${tramiteId}/recomendar_sucursal/`
       );
 
       setRecomendacion(response.data);
