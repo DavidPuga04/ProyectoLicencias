@@ -22,11 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d1)@33m6v+m%_(yvtzl6ky*w^x$s3k+!%gbio7x411-2+uq270'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+DEBUG = os.environ.get('DEBUG') == 'True'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
 ALLOWED_HOSTS = ['*']
 
 
@@ -83,8 +83,8 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get("DATABASE_URL")
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
     )
 }
 
