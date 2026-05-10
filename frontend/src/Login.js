@@ -10,7 +10,7 @@ const Login = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      const response = await fetch('https://backend-lic-ipej.onrender.com/api/login/', {
+      const response = await fetch('https://backend-lic-ipej.onrender.com/api/token/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
