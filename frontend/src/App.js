@@ -8,7 +8,7 @@ function App() {
   const [paso, setPaso] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [sedesMonitoreo, setSedesMonitoreo] = useState([]);
+  const [, setSedesMonitoreo] = useState([]);
   const [tramiteId, setTramiteId] = useState(null);
 
   const [archivos, setArchivos] = useState({
