@@ -48,7 +48,6 @@ class TramiteLicencia(models.Model):
         related_name='tramites',
         null=True,
         blank=True
-    
     )
 
     # Paso 1

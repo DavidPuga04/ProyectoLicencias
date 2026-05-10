@@ -8,7 +8,6 @@ function App() {
   const [paso, setPaso] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  
   const [tramiteId, setTramiteId] = useState(null);
 
   const [archivos, setArchivos] = useState({
@@ -23,23 +22,16 @@ function App() {
   const [zona, setZona] = useState("");
   const [cedula, setCedula] = useState("");
 
-
-
-  // LOGIN
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) setIsAuthenticated(true);
   }, []);
 
-
-
-  // ZONAS
   useEffect(() => {
-    axios.get('https://backend-lic-ipej.onrender.com/api/zonas/')
+    axios.get('http://127.0.0.1:8000/api/zonas/')
       .then(res => setZonas(res.data))
       .catch(err => console.error(err));
   }, []);
-
 
   const handleLogout = () => {
     localStorage.clear();
@@ -51,54 +43,30 @@ function App() {
     setRecomendacion(null);
   };
 
-
-
-  // ✅ INICIO TRÁMITE (ARREGLADO)
   const iniciarTramite = async () => {
-
-    if (!cedula) {
-      alert("Debe ingresar la cédula");
-      return;
-    }
+    if (!cedula) return alert("Debe ingresar la cédula");
 
     setLoading(true);
 
     try {
-
-      const res = await axios.post(
-        'https://backend-lic-ipej.onrender.com/api/tramites/validar_cedula/',
+      await axios.post(
+        'http://127.0.0.1:8000/api/tramites/validar_cedula/',
         { cedula_numero: cedula }
       );
-
-      console.log(res.data);
 
       setPaso(1);
 
     } catch (error) {
-
-      const msg =
-        error.response?.data?.cedula_numero?.[0] ||
-        error.response?.data?.error ||
-        "Cédula inválida";
-
-      alert(msg);
-
+      alert("Cédula inválida");
     } finally {
       setLoading(false);
     }
   };
 
-
-
-  // SUBIR ARCHIVOS (FIX DE BLOQUEO)
   const subirArchivoAlBack = async (tipo) => {
 
     const archivo = archivos[tipo];
-
-    if (!archivo) {
-      alert("Debe seleccionar un archivo");
-      return;
-    }
+    if (!archivo) return alert("Debe seleccionar un archivo");
 
     setLoading(true);
 
@@ -111,203 +79,180 @@ function App() {
       if (tipo === 'psico') formData.append('archivo_psico', archivo);
 
       formData.append('cedula_numero', cedula);
-      formData.append('paso_actual', paso + 1);
 
       const url = tramiteId
-        ? `https://backend-lic-ipej.onrender.com/api/tramites/${tramiteId}/`
-        : `https://backend-lic-ipej.onrender.com/api/tramites/`;
+        ? `http://127.0.0.1:8000/api/tramites/${tramiteId}/`
+        : `http://127.0.0.1:8000/api/tramites/`;
 
       const method = tramiteId ? 'patch' : 'post';
 
-      const response = await axios({
-        method,
-        url,
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const res = await axios({ method, url, data: formData });
 
-      if (!tramiteId) {
-        setTramiteId(response.data.id);
-      }
+      if (!tramiteId) setTramiteId(res.data.id);
 
       setPaso(prev => prev + 1);
 
-    } catch (error) {
-
-      console.error(error.response?.data);
-
-      alert(
-        error.response?.data?.error ||
-        "Error al subir archivo"
-      );
-
+    } catch (e) {
+      alert("Error al subir archivo");
     } finally {
       setLoading(false);
     }
   };
 
-
-
-  // RECOMENDACIÓN
   const obtenerRecomendacionInteligente = async () => {
 
-    if (!zona) {
-      alert("Debe seleccionar una zona");
-      return;
-    }
+    if (!zona) return alert("Debe seleccionar una zona");
 
     setLoading(true);
 
     try {
 
       await axios.patch(
-        `https://backend-lic-ipej.onrender.com/api/tramites/${tramiteId}/`,
-        { zona }
+        `http://127.0.0.1:8000/api/tramites/${tramiteId}/`,
+        { zona: parseInt(zona) }
       );
 
-      const response = await axios.get(
-        `https://backend-lic-ipej.onrender.com/api/tramites/${tramiteId}/recomendar_sucursal/`
+      const res = await axios.get(
+        `http://127.0.0.1:8000/api/tramites/${tramiteId}/recomendar_sucursal/`
       );
 
-      setRecomendacion(response.data);
+      setRecomendacion(res.data);
       setPaso(5);
 
-    } catch (error) {
-
+    } catch (e) {
       alert("Error en el CORE");
-
     } finally {
       setLoading(false);
     }
   };
 
-
-
   if (!isAuthenticated) {
     return <Login onLoginSuccess={() => setIsAuthenticated(true)} />;
   }
 
-
-
   return (
 
-    <div className="container" style={{ padding: '30px', maxWidth: '700px', margin: '0 auto', fontFamily: 'Segoe UI' }}>
+    <div style={{
+      padding: 30,
+      maxWidth: 750,
+      margin: '0 auto',
+      fontFamily: 'Segoe UI',
+      background: '#f5f7fa'
+    }}>
 
-      <header style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #eee' }}>
+      {/* HEADER */}
+      <header style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        borderBottom: '2px solid #ddd',
+        paddingBottom: 10
+      }}>
         <h2>ANT - Gestión de Licencias</h2>
-        <button onClick={handleLogout} style={{ color: 'red' }}>Cerrar Sesión</button>
+        <button onClick={handleLogout} style={{ color: 'red' }}>
+          Cerrar Sesión
+        </button>
       </header>
-
-
 
       {/* PROGRESO */}
       {paso > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'space-around', margin: '20px 0' }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          margin: 20
+        }}>
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} style={{ color: paso >= i ? '#007bff' : '#ccc', fontWeight: 'bold' }}>
-              {i === 5 ? '🎯' : `Paso ${i}`}
+            <div key={i} style={{
+              fontWeight: 'bold',
+              color: paso >= i ? '#007bff' : '#ccc'
+            }}>
+              {i === 5 ? '🎫' : `Paso ${i}`}
             </div>
           ))}
         </div>
       )}
 
-
-
-      <main style={{ background: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
-
-
+      <main style={{
+        background: '#fff',
+        padding: 20,
+        borderRadius: 10
+      }}>
 
         {/* INICIO */}
         {paso === 0 && (
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <h3>Inicio del trámite</h3>
 
             <input
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
               placeholder="Cédula"
-              style={{ width: '100%', padding: '10px' }}
+              style={{ padding: 10, width: '80%' }}
             />
 
-            <button onClick={iniciarTramite} disabled={loading}>
+            <br /><br />
+
+            <button onClick={iniciarTramite}>
               {loading ? "Validando..." : "Iniciar trámite"}
             </button>
           </div>
         )}
 
-
-
         {/* PASOS 1-3 */}
         {paso >= 1 && paso <= 3 && (
-          <div>
+          <div style={{ textAlign: 'center' }}>
 
             <h3>Paso {paso}</h3>
 
-            <input
-              type="file"
+            <input type="file"
               onChange={(e) => {
                 const file = e.target.files[0];
-
                 if (paso === 1) setArchivos({ ...archivos, cedula: file });
                 if (paso === 2) setArchivos({ ...archivos, sangre: file });
                 if (paso === 3) setArchivos({ ...archivos, psico: file });
               }}
             />
 
+            <br /><br />
+
             <button onClick={() =>
               subirArchivoAlBack(
                 paso === 1 ? 'cedula' :
-                  paso === 2 ? 'sangre' : 'psico'
-              )}
-              disabled={loading}
-            >
-              {loading ? 'Subiendo...' : 'Siguiente'}
+                paso === 2 ? 'sangre' : 'psico'
+              )
+            }>
+              {loading ? "Subiendo..." : "Siguiente"}
             </button>
 
           </div>
         )}
-
-
 
         {/* PASO 4 */}
         {paso === 4 && (
           <div style={{ textAlign: 'center' }}>
 
-            <h3>Paso 4: Pago y Procesamiento Inteligente</h3>
+            <h3>Paso 4: Selección de zona</h3>
 
-            <div style={{ background: '#fff', padding: '20px', borderRadius: '8px' }}>
-
-              <p style={{ color: '#28a745', fontWeight: 'bold' }}>
-                ✓ Documentación validada.
-              </p>
-
-              <select
-                value={zona}
-                onChange={(e) => setZona(e.target.value)}
-                style={{ width: '100%', padding: '10px' }}
-              >
-                <option value="">Seleccione zona</option>
-                {zonas.map(z => (
-                  <option key={z.id} value={z.id}>{z.nombre}</option>
-                ))}
-              </select>
-
-            </div>
-
-            <button
-              onClick={obtenerRecomendacionInteligente}
-              disabled={loading}
-              style={{ marginTop: '15px', background: 'green', color: 'white' }}
+            <select
+              value={zona}
+              onChange={(e) => setZona(e.target.value)}
+              style={{ width: '100%', padding: 10 }}
             >
-              {loading ? "Procesando..." : "Pagar y Ver Recomendación"}
+              <option value="">Seleccione zona</option>
+              {zonas.map(z => (
+                <option key={z.id} value={z.id}>{z.nombre}</option>
+              ))}
+            </select>
+
+            <br /><br />
+
+            <button onClick={obtenerRecomendacionInteligente}>
+              {loading ? "Procesando..." : "Continuar"}
             </button>
 
           </div>
         )}
 
-
-
-        {/* PASO 5 */}
+        {/* PASO 5 — EXACTO COMO LO PEDISTE */}
         {paso === 5 && recomendacion && (
           <div style={{ padding: '20px', border: '2px solid #007bff', background: '#fff', borderRadius: '10px', textAlign: 'center' }}>
 
@@ -332,10 +277,8 @@ function App() {
         )}
 
       </main>
-
     </div>
   );
 }
-
 
 export default App;
