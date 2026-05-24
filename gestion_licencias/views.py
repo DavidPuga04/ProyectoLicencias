@@ -12,9 +12,8 @@ class TramiteViewSet(viewsets.ModelViewSet):
     serializer_class = TramiteSerializer
     permission_classes = [AllowAny]
 
-    # =========================
+   
     # VALIDAR CÉDULA
-    # =========================
     @action(detail=False, methods=['post'])
     def validar_cedula(self, request):
         cedula = request.data.get("cedula_numero")
@@ -28,9 +27,8 @@ class TramiteViewSet(viewsets.ModelViewSet):
         return Response({"ok": True})
 
 
-    # =========================
+  
     # MONITOREO
-    # =========================
     @action(detail=False, methods=['get'])
     def listar_monitoreo(self, request):
         sucursales = Sucursal.objects.all()
@@ -54,9 +52,8 @@ class TramiteViewSet(viewsets.ModelViewSet):
         return Response(data)
 
 
-    # =========================
-    # RECOMENDACIÓN (CORREGIDO)
-    # =========================
+   
+    # RECOMENDACIÓN
     @action(detail=True, methods=['get'])
     def recomendar_sucursal(self, request, pk=None):
 
@@ -79,7 +76,7 @@ class TramiteViewSet(viewsets.ModelViewSet):
 
             for s in sucursales:
 
-                # 🔴 FIX CRÍTICO: evitar NULL
+                # Evitar NULL
                 if s.latitud is None or s.longitud is None:
                     continue
 

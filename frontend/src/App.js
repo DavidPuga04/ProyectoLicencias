@@ -252,7 +252,7 @@ function App() {
           </div>
         )}
 
-        {/* PASO 5 — EXACTO COMO LO PEDISTE */}
+        {/* PASO 5 */}
         {paso === 5 && recomendacion && (
           <div style={{ padding: '20px', border: '2px solid #007bff', background: '#fff', borderRadius: '10px', textAlign: 'center' }}>
 
