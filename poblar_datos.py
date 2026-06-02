@@ -64,53 +64,67 @@ zona, created = Zona.objects.update_or_create(
 # SUCURSALES
 # =====================
 
-s1, _ = Sucursal.objects.get_or_create(
+s1, _ = Sucursal.objects.update_or_create(
     nombre="ANT Occidental",
-    direccion="Av. Mariscal Sucre y José Sánchez, Quito.",
-    latitud=-0.216,
-    longitud=-78.509
+    defaults={
+        "direccion": "Av. Mariscal Sucre y José Sánchez, Quito.",
+        "latitud": -0.216,
+        "longitud": -78.509
+    }
 )
 
-s2, _ = Sucursal.objects.get_or_create(
+s2, _ = Sucursal.objects.update_or_create(
     nombre="ANT Tumbaco",
-    direccion="Eugenio Espejo S2-58 y Av. Interoceánica Km 14 ½, Tumbaco",
-    latitud=-0.175,
-    longitud=-78.490
+    defaults={
+        "direccion": "Eugenio Espejo S2-58 y Av. Interoceánica Km 14 ½, Tumbaco",
+        "latitud": -0.175,
+        "longitud": -78.490
+    }
 )
 
-s3, _ = Sucursal.objects.get_or_create(
+s3, _ = Sucursal.objects.update_or_create(
     nombre="Plataforma Gubernamental Sur",
-    direccion="Av. Amaru Ñan y Av. Quitumbe Ñan, Quito",
-    latitud=-0.2921,
-    longitud=-78.5456
+    defaults={
+        "direccion": "Av. Amaru Ñan y Av. Quitumbe Ñan, Quito",
+        "latitud": -0.2921,
+        "longitud": -78.5456
+    }
 )
 
-s4, _ = Sucursal.objects.get_or_create(
+s4, _ = Sucursal.objects.update_or_create(
     nombre="Plataforma Gubernamental Norte",
-    direccion="Av. Amazonas y Alfonso Pereira, Quito",
-    latitud=-0.1768,
-    longitud=-78.4862
+    defaults={
+        "direccion": "Av. Amazonas y Alfonso Pereira, Quito",
+        "latitud": -0.1768,
+        "longitud": -78.4862
+    }
 )
 
-s5, _ = Sucursal.objects.get_or_create(
+s5, _ = Sucursal.objects.update_or_create(
     nombre="Agencia Rumiñahui",
-    direccion="Sangolquí, calle Venezuela 819 y Montúfar",
-    latitud=-0.3340,
-    longitud=-78.4520
+    defaults={
+        "direccion": "Sangolquí, calle Venezuela 819 y Montúfar",
+        "latitud": -0.3340,
+        "longitud": -78.4520
+    }
 )
 
-s6, _ = Sucursal.objects.get_or_create(
+s6, _ = Sucursal.objects.update_or_create(
     nombre="Agencia Cayambe",
-    direccion="José de San Martín S/N y Dolores Veintimilla, Cayambe",
-    latitud=0.0405,
-    longitud=-78.1450
+    defaults={
+        "direccion": "José de San Martín S/N y Dolores Veintimilla, Cayambe",
+        "latitud": 0.0405,
+        "longitud": -78.1450
+    }
 )
 
-s7, _ = Sucursal.objects.get_or_create(
+s7, _ = Sucursal.objects.update_or_create(
     nombre="Agencia Machachi",
-    direccion="Calle Barriga S/N y César Calvache, Machachi",
-    latitud=-0.5105,
-    longitud=-78.5678
+    defaults={
+        "direccion": "Calle Barriga S/N y César Calvache, Machachi",
+        "latitud": -0.5105,
+        "longitud": -78.5678
+    }
 )
 
 # =====================
